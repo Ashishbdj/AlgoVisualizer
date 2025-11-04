@@ -42,13 +42,13 @@ export default function HomePage() {
   const particles = Array.from({ length: particleCount });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 via-white to-indigo-100">
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 via-white to-indigo-100 mt-0">
       {/* NAVBAR */}
       <Navbar />
 
       {/* HERO SECTION */}
       <section
-        className="relative flex flex-col items-center justify-center h-[50vh] text-center px-4 overflow-hidden rounded-b-3xl"
+        className="relative pt-10\ flex flex-col items-center justify-center h-[50vh] text-center px-4 overflow-hidden rounded-b-3xl"
         style={{ background: "linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)" }}
       >
         {particles.map((_, idx) => {
