@@ -63,7 +63,6 @@ export default function SelectionSort({ initialData }) {
     return stepsArr;
   };
 
-  // Initialize steps
   useEffect(() => {
     const allSteps = generateSteps(array);
     setSteps(allSteps);
@@ -71,7 +70,6 @@ export default function SelectionSort({ initialData }) {
     setIsPlaying(false);
   }, [array]);
 
-  // Auto-play functionality
   useEffect(() => {
     if (isPlaying) {
       timerRef.current = setInterval(() => {
@@ -87,7 +85,6 @@ export default function SelectionSort({ initialData }) {
     return () => clearInterval(timerRef.current);
   }, [isPlaying, steps]);
 
-  // Handle user input
   const handleUserData = () => {
     if (!userInput) return;
     const userArray = userInput
@@ -98,22 +95,10 @@ export default function SelectionSort({ initialData }) {
     setUserInput("");
   };
 
-  const goNext = () => {
-    if (currentStep < steps.length - 1) setCurrentStep(currentStep + 1);
-  };
-
-  const goPrev = () => {
-    if (currentStep > 0) setCurrentStep(currentStep - 1);
-  };
-
-  const reset = () => {
-    setCurrentStep(0);
-    setIsPlaying(false);
-  };
-
-  const togglePlay = () => {
-    setIsPlaying(!isPlaying);
-  };
+  const goNext = () => currentStep < steps.length - 1 && setCurrentStep(currentStep + 1);
+  const goPrev = () => currentStep > 0 && setCurrentStep(currentStep - 1);
+  const reset = () => { setCurrentStep(0); setIsPlaying(false); };
+  const togglePlay = () => setIsPlaying(!isPlaying);
 
   const stepData = steps[currentStep] || {
     array: array,
@@ -123,97 +108,124 @@ export default function SelectionSort({ initialData }) {
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 p-4">
-      {/* Info Section */}
-      <div className="max-w-3xl text-left bg-white p-6 rounded-3xl shadow-lg border border-gray-200">
-        <h2 className="text-2xl font-bold text-indigo-600 mb-2">Selection Sort</h2>
-        <p className="text-gray-700 mb-2">
-          Selection Sort is a simple **comparison-based sorting algorithm**. It divides the array into a
-          sorted and unsorted region. Repeatedly, the smallest (or largest) element is selected from the
-          unsorted region and swapped with the first unsorted element.
-        </p>
-        <h3 className="text-lg font-semibold text-indigo-500 mt-2">How it Works:</h3>
-        <ol className="list-decimal list-inside text-gray-700 mb-2">
-          <li>Start from the beginning of the array.</li>
-          <li>Find the smallest element in the unsorted portion.</li>
-          <li>Swap it with the first element of the unsorted portion.</li>
-          <li>Move the sorted boundary one step ahead.</li>
-          <li>Repeat until the array is sorted.</li>
-        </ol>
-        <p className="text-gray-700 font-semibold mt-2">{stepData.message}</p>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <h1 className="text-6xl font-bold text-indigo-600 text-center mb-6">
+        Selection Sort Visualizer
+      </h1>
+
+      <div className="flex flex-col lg:flex-row gap-6">
+        {/* Left Column: Visualization */}
+        <div className="flex-1 flex flex-col items-center justify-center bg-white p-6 rounded-3xl shadow-lg border border-gray-200">
+         
+
+          {/* User Input */}
+          <div className="flex flex-col sm:flex-row gap-2 mb-6 items-center">
+            <input
+              type="text"
+              placeholder="Enter array (e.g., 5,3,8,1)"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              className="border rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
+            <button
+              onClick={handleUserData}
+              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
+            >
+              Submit
+            </button>
+          </div>
+
+          {/* Visualization Bars */}
+          <div className="flex flex-row gap-4 justify-center items-end h-40">
+            {stepData.array.map((val, idx) => {
+              let color = "bg-blue-400";
+              if (stepData.comparing.includes(idx)) color = "bg-yellow-400";
+              if (stepData.swapped.includes(idx)) color = "bg-red-500";
+
+              return (
+                <div key={idx} className="flex flex-col items-center">
+                  <span className="text-sm font-semibold mb-1">{val}</span>
+                  <motion.div
+                    animate={{ height: val * 2 }}
+                    transition={{ duration: 0.3 }}
+                    className={`${color} w-8 rounded-t-lg`}
+                  />
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Controls */}
+          <div className="flex gap-4 mt-6 justify-center flex-wrap">
+            <button
+              onClick={goPrev}
+              className="bg-gray-300 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
+            >
+              Previous
+            </button>
+            <button
+              onClick={togglePlay}
+              className={`px-6 py-2 rounded-lg text-white transition ${
+                isPlaying ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
+              }`}
+            >
+              {isPlaying ? "Pause" : "Play"}
+            </button>
+            <button
+              onClick={goNext}
+              className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition"
+            >
+              Next
+            </button>
+            <button
+              onClick={reset}
+              className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition"
+            >
+              Reset
+            </button>
+          </div>
+
+          <p className="text-gray-600 mt-2">
+            Step {currentStep + 1} / {steps.length}
+          </p>
+           <p className="text-gray-700 mb-4 font-semibold">{stepData.message}</p>
+        </div>
+
+        {/* Right Column: Information */}
+        <div className="flex-1 bg-white p-6 rounded-3xl shadow-lg border border-gray-200 space-y-4">
+          <h2 className="text-5xl font-bold text-indigo-600">Selection Sort</h2>
+          <p className="text-gray-700 text-4xl ">
+            Selection Sort is a comparison-based sorting algorithm that divides the array into a sorted and unsorted region. It repeatedly selects the smallest element from the unsorted portion and moves it to the sorted portion.
+          </p>
+
+          <h3 className="text-5xl font-semibold text-indigo-500">Pseudocode:</h3>
+          <pre className="bg-gray-100 p-3 rounded text-4xl text-gray-800">
+{`for i = 0 to n-1:
+    minIndex = i
+    for j = i+1 to n:
+        if array[j] < array[minIndex]:
+            minIndex = j
+    swap(array[i], array[minIndex])`}
+          </pre>
+
+          <h3 className="text-5xl font-semibold text-indigo-500">Time Complexity:</h3>
+          <ul className="list-disc text-4xl list-inside text-gray-700">
+            <li>Best Case: O(n²)</li>
+            <li>Average Case: O(n²)</li>
+            <li>Worst Case: O(n²)</li>
+          </ul>
+
+          <h3 className="text-5xl font-semibold text-indigo-500">Space Complexity:</h3>
+          <p className="text-gray-700 text-4xl">O(1)</p>
+
+          <h3 className="text-5xl font-semibold text-indigo-500">Use Cases:</h3>
+          <ul className="list-disc list-inside text-4xl text-gray-700">
+            <li>Small arrays</li>
+            <li>When memory is limited</li>
+            <li>Educational purposes</li>
+          </ul>
+        </div>
       </div>
-
-      {/* User Input */}
-      <div className="flex flex-col sm:flex-row gap-2 mt-4">
-        <input
-          type="text"
-          placeholder="Enter array (e.g., 5,3,8,1)"
-          value={userInput}
-          onChange={(e) => setUserInput(e.target.value)}
-          className="border rounded-lg p-2 w-64 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-        />
-        <button
-          onClick={handleUserData}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-        >
-          Submit
-        </button>
-      </div>
-
-      {/* Visualization Bars */}
-      <div className="flex gap-2 h-44 items-end relative mt-4">
-        {stepData.array.map((val, idx) => {
-          let color = "bg-blue-400";
-          if (stepData.comparing.includes(idx)) color = "bg-yellow-400";
-          if (stepData.swapped.includes(idx)) color = "bg-red-500";
-
-          return (
-            <div key={idx} className="flex flex-col items-center">
-              <span className="text-sm font-semibold mb-1">{val}</span>
-              <motion.div
-                animate={{ height: val * 2 }}
-                transition={{ duration: 0.3 }}
-                className={`${color} w-6 rounded-t-lg`}
-              />
-            </div>
-          );
-        })}
-      </div>
-
-      {/* Controls */}
-      <div className="flex gap-4 mt-4 flex-wrap justify-center">
-        <button
-          onClick={goPrev}
-          className="bg-gray-300 px-4 py-2 rounded-lg hover:bg-gray-400 transition"
-        >
-          Previous
-        </button>
-        <button
-          onClick={goNext}
-          className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition"
-        >
-          Next
-        </button>
-        <button
-          onClick={togglePlay}
-          className={`px-4 py-2 rounded-lg text-white transition ${
-            isPlaying ? "bg-red-500 hover:bg-red-600" : "bg-green-500 hover:bg-green-600"
-          }`}
-        >
-          {isPlaying ? "Pause" : "Play"}
-        </button>
-        <button
-          onClick={reset}
-          className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition"
-        >
-          Reset
-        </button>
-      </div>
-
-      {/* Step Info */}
-      <p className="text-gray-600 mt-2">
-        Step {currentStep + 1} / {steps.length}
-      </p>
     </div>
   );
 }

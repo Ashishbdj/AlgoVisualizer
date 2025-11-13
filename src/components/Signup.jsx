@@ -11,79 +11,87 @@ export default function Signup() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: Add signup logic or API call here
     console.log("Signup Data:", form);
-    navigate("/login"); // redirect to login after signup
+    navigate("/login");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-600 to-indigo-800">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-700 via-indigo-800 to-blue-900 relative overflow-hidden">
+      {/* Background Glow Animation */}
+      <div className="absolute w-[500px] h-[500px] bg-indigo-500 opacity-20 blur-3xl rounded-full top-10 left-10 animate-pulse"></div>
+      <div className="absolute w-[600px] h-[600px] bg-purple-500 opacity-25 blur-3xl rounded-full bottom-10 right-10 animate-ping"></div>
+
+      {/* Signup Card */}
       <motion.div
-        initial={{ y: 30, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        className="bg-white shadow-lg rounded-2xl p-8 w-96"
+        initial={{ scale: 0.85, opacity: 0, y: 50 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 90 }}
+        className="relative bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl rounded-3xl p-14 w-[550px]"
       >
-        <h2 className="text-3xl font-bold text-center text-purple-600 mb-6">Sign Up</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-600 mb-1">Name</label>
-            <div className="flex items-center border rounded-lg px-3">
-              <FaUser className="text-gray-400 mr-2" />
-              <input
-                type="text"
-                name="name"
-                value={form.name}
-                onChange={handleChange}
-                placeholder="Enter your name"
-                required
-                className="w-full p-2 outline-none"
-              />
-            </div>
+        <h2 className="text-5xl font-extrabold text-center text-white mb-10 tracking-wide drop-shadow-lg">
+          Create Account ✨
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-10">
+          {/* Name */}
+          <div className="relative">
+            <FaUser className="absolute left-3 top-4 text-gray-300 text-xl" />
+            <input
+              type="text"
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+              placeholder="Enter your name"
+              className="w-full bg-transparent border-b-2 border-gray-400 text-white text-lg pl-12 py-4 focus:outline-none focus:border-purple-400 transition"
+            />
           </div>
 
-          <div>
-            <label className="block text-gray-600 mb-1">Email</label>
-            <div className="flex items-center border rounded-lg px-3">
-              <FaEnvelope className="text-gray-400 mr-2" />
-              <input
-                type="email"
-                name="email"
-                value={form.email}
-                onChange={handleChange}
-                placeholder="Enter your email"
-                required
-                className="w-full p-2 outline-none"
-              />
-            </div>
+          {/* Email */}
+          <div className="relative">
+            <FaEnvelope className="absolute left-3 top-4 text-gray-300 text-xl" />
+            <input
+              type="email"
+              name="email"
+              value={form.email}
+              onChange={handleChange}
+              required
+              placeholder="Enter your email"
+              className="w-full bg-transparent border-b-2 border-gray-400 text-white text-lg pl-12 py-4 focus:outline-none focus:border-purple-400 transition"
+            />
           </div>
 
-          <div>
-            <label className="block text-gray-600 mb-1">Password</label>
-            <div className="flex items-center border rounded-lg px-3">
-              <FaLock className="text-gray-400 mr-2" />
-              <input
-                type="password"
-                name="password"
-                value={form.password}
-                onChange={handleChange}
-                placeholder="Create a password"
-                required
-                className="w-full p-2 outline-none"
-              />
-            </div>
+          {/* Password */}
+          <div className="relative">
+            <FaLock className="absolute left-3 top-4 text-gray-300 text-xl" />
+            <input
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={handleChange}
+              required
+              placeholder="Create a password"
+              className="w-full bg-transparent border-b-2 border-gray-400 text-white text-lg pl-12 py-4 focus:outline-none focus:border-purple-400 transition"
+            />
           </div>
 
-          <button
+          {/* Button */}
+          <motion.button
+            whileHover={{ scale: 1.05, boxShadow: "0 0 20px rgba(147,51,234,0.6)" }}
+            whileTap={{ scale: 0.97 }}
             type="submit"
-            className="w-full bg-purple-600 text-white font-semibold py-2 rounded-lg hover:bg-purple-700 transition"
+            className="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold text-lg py-4 rounded-2xl shadow-lg transition-all duration-200"
           >
             Sign Up
-          </button>
+          </motion.button>
         </form>
 
-        <p className="text-gray-500 text-center mt-4">
+        <p className="text-gray-300 text-center mt-8 text-lg">
           Already have an account?{" "}
-          <Link to="/login" className="text-purple-600 hover:underline">
+          <Link
+            to="/login"
+            className="text-purple-400 hover:text-purple-300 font-semibold underline"
+          >
             Login
           </Link>
         </p>

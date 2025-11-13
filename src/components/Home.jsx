@@ -1,15 +1,10 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import BubbleSortVisualizer from "../components/BubbleSortVisualizer";
-import DijkstraVisualizer from "../components/DijkstraVisualizer";
+import { useNavigate } from "react-router-dom";
 
 export default function HomePage() {
-  const initialArray = [50, 80, 30, 70, 60, 90, 40];
-  const [selectedAlgorithm, setSelectedAlgorithm] = useState(null);
-  const dijkstraRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Mouse position for interactive particles
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   useEffect(() => {
     const handleMouseMove = (e) => setMousePos({ x: e.clientX, y: e.clientY });
@@ -17,38 +12,27 @@ export default function HomePage() {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
-  // Dummy algorithm cards
   const algorithms = [
-    { name: "Bubble Sort", desc: "Simple comparison-based sorting algorithm." },
-    { name: "Dijkstra's Algorithm", desc: "Finds shortest path in a graph." },
-    { name: "Merge Sort", desc: "Divide-and-conquer sorting algorithm." },
-    { name: "Quick Sort", desc: "Efficient recursive sorting algorithm." },
-    { name: "Binary Search", desc: "Efficient search on sorted data." },
-    { name: "DFS Traversal", desc: "Graph traversal using depth-first search." },
+    { name: "Bubble Sort", desc: "Simple comparison-based sorting algorithm.", path: "bubble-sort" },
+    { name: "Dijkstra's Algorithm", desc: "Finds shortest path in a graph.", path: "dijkstra" },
+    { name: "Merge Sort", desc: "Divide-and-conquer sorting algorithm.", path: "merge-sort" },
+    { name: "Quick Sort", desc: "Efficient recursive sorting algorithm.", path: "quick-sort" },
+    { name: "Binary Search", desc: "Efficient search on sorted data.", path: "binary-search" },
+    { name: "DFS Traversal", desc: "Graph traversal using depth-first search.", path: "dfs" },
   ];
 
-  // Scroll to algorithm section
   const handleCardClick = (algo) => {
-    setSelectedAlgorithm(algo.name);
-    setTimeout(() => {
-      if (dijkstraRef.current && algo.name === "Dijkstra's Algorithm") {
-        dijkstraRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-    }, 100);
+    navigate(`/algorithm/${algo.path}`);
   };
 
-  // Particles for hero
   const particleCount = 20;
   const particles = Array.from({ length: particleCount });
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50 via-white to-indigo-100 mt-0">
-      {/* NAVBAR */}
-      <Navbar />
-
+    <div>
       {/* HERO SECTION */}
       <section
-        className="relative pt-10\ flex flex-col items-center justify-center h-[50vh] text-center px-4 overflow-hidden rounded-b-3xl"
+        className="relative flex flex-col items-center justify-center h-[50vh] text-center px-4 overflow-hidden rounded-b-3xl"
         style={{ background: "linear-gradient(135deg, #6B73FF 0%, #000DFF 100%)" }}
       >
         {particles.map((_, idx) => {
@@ -99,8 +83,8 @@ export default function HomePage() {
           <motion.div
             key={index}
             whileHover={{ scale: 1.05 }}
-            className="bg-white p-6 rounded-3xl shadow-lg hover:shadow-2xl border border-gray-200 transition cursor-pointer"
             onClick={() => handleCardClick(algo)}
+            className="bg-white p-6 rounded-3xl shadow-lg hover:shadow-2xl border border-gray-200 transition cursor-pointer"
           >
             <h2 className="text-2xl font-bold text-indigo-600 mb-2 bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-pink-500">
               {algo.name}
@@ -108,12 +92,6 @@ export default function HomePage() {
             <p className="text-gray-600 text-sm">{algo.desc}</p>
           </motion.div>
         ))}
-      </section>
-
-      {/* Algorithm Visualizer Section */}
-      <section ref={dijkstraRef} className="w-full px-6 sm:px-12 py-16">
-        {selectedAlgorithm === "Bubble Sort" && <BubbleSortVisualizer initialData={initialArray} />}
-        {selectedAlgorithm === "Dijkstra's Algorithm" && <DijkstraVisualizer />}
       </section>
 
       {/* FOOTER */}

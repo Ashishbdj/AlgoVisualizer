@@ -27,7 +27,7 @@ function App() {
   return (
     <Router>
       <Navbar />
-      <div className="pt-20"> {/* To prevent navbar overlap */}
+      <div className="pt-28"> {/* To prevent navbar overlap */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/algorithms" element={<Algorithms />} />
